@@ -39,18 +39,6 @@ end
 function love.visible(visible)
 end
 
--- ##############
--- ERROR HANDLING
--- ##############
-
--- Error handling
-function love.errhand(msg)
-end
-
--- Thread error handler
-function love.threaderror(thread, errorstr)
-end
-
 -- ###############
 -- KEYBOARD EVENTS
 -- ###############
@@ -141,4 +129,5 @@ end
 
 -- Updates with variable delta time
 function love.update(dt)
+    Timer.update(dt)
 end
