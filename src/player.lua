@@ -218,6 +218,13 @@ return {
             end
         end
 
+        if self.currAnimation then self.currAnimation:update(dt) end
+    end,
+    draw = function(self)
+        self:checkAnimation()
+        self.currAnimation:draw(self.spritesheet, self.p.x + (self.d.w - self.d.sprite.w) / 2, self.p.y + (self.d.h - self.d.sprite.h) / 2)
+    end,
+    checkAnimation = function(self)
         -- Change animation
         if self.state.grounded then
             if self.v.x == 0 then
@@ -254,10 +261,5 @@ return {
                 end
             end
         end
-
-        self.currAnimation:update(dt)
-    end,
-    draw = function(self)
-        self.currAnimation:draw(self.spritesheet, self.p.x + (self.d.w - self.d.sprite.w) / 2, self.p.y + (self.d.h - self.d.sprite.h) / 2)
     end
 }
