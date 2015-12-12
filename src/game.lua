@@ -67,9 +67,11 @@ function game:draw()
         g.scale(self.settings.scale, self.settings.scale)
         local player = self.map.layers["GameObjects"].GameObjects.player
         g.translate(-player.p.x + self.settings.window.w / (2 * self.settings.scale), -player.p.y + self.settings.window.h / (2 * self.settings.scale))
-        self.map:setDrawRange(player.p.x - self.settings.window.w / 2, player.p.y - self.settings.window.h / 2, self.settings.window.w, self.settings.window.h) 
+        self.map:setDrawRange(player.p.x - self.settings.window.w / 2, player.p.y - self.settings.window.h / 2, self.settings.window.w, self.settings.window.h)
+        self.map:drawLayer(self.map.layers["Background"])
         self.map:drawLayer(self.map.layers["Collision"])
         self.map:drawLayer(self.map.layers["GameObjects"])
+        self.map:drawLayer(self.map.layers["Foreground"])
         g.draw(self.snowParticles, 50*16, 0)
     g.pop()
 end

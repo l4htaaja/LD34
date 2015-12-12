@@ -52,8 +52,8 @@ return {
         self.anims.placeHolder = anim8.newAnimation(grid(7, 1), 999)
         self.anims.idleLeft = anim8.newAnimation(grid("1-6", 1), 0.35)
         self.anims.idleRight = anim8.newAnimation(grid("1-6", 2), 0.35)
-        self.anims.moveLeft = anim8.newAnimation(grid("1-5", 3), 0.15)
-        self.anims.moveRight = anim8.newAnimation(grid("1-5", 4), 0.15)
+        self.anims.moveLeft = anim8.newAnimation(grid("1-5", 3), 0.1)
+        self.anims.moveRight = anim8.newAnimation(grid("1-5", 4), 0.1)
         self.anims.risingLeft = anim8.newAnimation(grid(6, 3), 999)
         self.anims.fallingLeft = anim8.newAnimation(grid(7, 3), 999)
         self.anims.risingRight = anim8.newAnimation(grid(6, 4), 999)
@@ -63,12 +63,13 @@ return {
     end,
     update = function(self, map, dt)
         local isSpring = function(x, y)
-            return map:getTileProperties("Collision", x + 1, y + 1).id == 1
+            local properties = map:getTileProperties("Collision", x + 1, y + 1).properties
+            return properties and properties.Spring
         end
         local isSolid = function(x, y)
             -- Because why wouldn't it be 1-indexed >_>
-            return map:getTileProperties("Collision", x + 1, y + 1).id == 0 or 
-                map:getTileProperties("Collision", x + 1, y + 1).id == 1
+            local properties = map:getTileProperties("Collision", x + 1, y + 1).properties
+            return properties and properties.Solid
         end
 
         local lx, uy = map:convertScreenToTile(self.p.x, self.p.y)
