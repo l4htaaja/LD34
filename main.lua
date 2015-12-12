@@ -4,6 +4,19 @@
 
 -- Runs once when the game loads
 function love.load()
+    --math.randomseed(os.time())
+    --math.random()
+
+    Timer = require "lib.timer"
+    GS = require "lib.venus"
+    GS.timer = Timer
+    GS.effect = "fade"
+    GS.duration = 1
+    GS.registerEvents()
+
+    game = require "src.game"
+
+    GS.switch(game)
 end
 
 -- Runs once when closing down the game
