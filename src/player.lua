@@ -11,6 +11,10 @@ local MAX_VELOCITY_X = 75
 local MAX_VELOCITY_Y = 150
 local SPRING_VELOCITY = -150
 
+local rectIntersect = function(x1, y1, w1, h1, x2, y2, w2, h2)
+    return not ((x1 > (x2 + w2)) or ((x1 + w1) < x2) or (y1 > (y2 + h2)) or ((y1 + h1) < y2))
+end
+
 return {
     spritesheet = g.newImage("assets/player.png"),
     currAnimation = nil,
@@ -61,19 +65,19 @@ return {
         self.anims.climbingLeft = anim8.newAnimation(grid("1-4", 5), 0.2)
         self.anims.climbingRight = anim8.newAnimation(grid("1-4", 6), 0.2)
     end,
-    update = function(self, map, dt)
+    update = function(self, game, dt)
         local isSpring = function(x, y)
-            local properties = map:getTileProperties("Collision", x + 1, y + 1).properties
+            local properties = game.map:getTileProperties("Collision", x + 1, y + 1).properties
             return properties and properties.Spring
         end
         local isSolid = function(x, y)
             -- Because why wouldn't it be 1-indexed >_>
-            local properties = map:getTileProperties("Collision", x + 1, y + 1).properties
+            local properties = game.map:getTileProperties("Collision", x + 1, y + 1).properties
             return properties and properties.Solid
         end
 
-        local lx, uy = map:convertScreenToTile(self.p.x, self.p.y)
-        local rx, dy = map:convertScreenToTile(self.p.x + self.d.w, self.p.y + self.d.h)
+        local lx, uy = game.map:convertScreenToTile(self.p.x, self.p.y)
+        local rx, dy = game.map:convertScreenToTile(self.p.x + self.d.w, self.p.y + self.d.h)
 
         -- convertScreenToTile doesn't automatically round (convertTileToScreen doesn't expect integers either!)
         lx = math.floor(lx)
@@ -85,8 +89,8 @@ return {
         self.a.x = 0
         self.a.y = GRAVITY
 
-        if k.isDown("left") then self.a.x = self.a.x - ACCELERATION end
-        if k.isDown("right") then self.a.x = self.a.x + ACCELERATION end
+        if game.settings.keys.left and k.isDown(game.settings.keys.left) then self.a.x = self.a.x - ACCELERATION end
+        if game.settings.keys.right and k.isDown(game.settings.keys.right) then self.a.x = self.a.x + ACCELERATION end
 
         -- Vertical movement
         local spring = self.state.grounded and (isSpring(lx, dy + 1) or isSpring(rx, dy + 1))
@@ -146,8 +150,8 @@ return {
 
         -- Check that we are not inside a tile after this!
         -- Also set the different state flags
-        local nlx, nuy = map:convertScreenToTile(newX, newY)
-        local nrx, ndy = map:convertScreenToTile(newX + self.d.w, newY + self.d.h)
+        local nlx, nuy = game.map:convertScreenToTile(newX, newY)
+        local nrx, ndy = game.map:convertScreenToTile(newX + self.d.w, newY + self.d.h)
 
         nlx = math.floor(nlx)
         nuy = math.floor(nuy)
@@ -167,7 +171,7 @@ return {
             if firstFree == nlx then
                 self.p.x = newX
             else
-                self.p.x = select(1, map:convertTileToScreen(firstFree, 0))
+                self.p.x = select(1, game.map:convertTileToScreen(firstFree, 0))
                 self.state.huggingLeft = true
                 self.v.x = 0
             end
@@ -183,7 +187,7 @@ return {
                 self.p.x = newX
             else
                 -- Note the arbitrarily small number substracted! That returns the player to the right tile
-                self.p.x = select(1, map:convertTileToScreen(firstFree + 1, 0)) - self.d.w - 0.00001
+                self.p.x = select(1, game.map:convertTileToScreen(firstFree + 1, 0)) - self.d.w - 0.00001
                 self.state.huggingRight = true
                 self.v.x = 0
             end
@@ -199,7 +203,7 @@ return {
             if firstFree == nuy then
                 self.p.y = newY
             else
-                self.p.y = select(2, map:convertTileToScreen(0, firstFree))
+                self.p.y = select(2, game.map:convertTileToScreen(0, firstFree))
                 self.v.y = 0
             end
         elseif self.v.y > 0 then
@@ -212,10 +216,49 @@ return {
                 self.p.y = newY
             else
                 -- Small number here too!
-                self.p.y = select(2, map:convertTileToScreen(0, firstFree + 1)) - self.d.h - 0.00001
+                self.p.y = select(2, game.map:convertTileToScreen(0, firstFree + 1)) - self.d.h - 0.00001
                 self.state.grounded = true
                 self.v.y = 0
             end
+        end
+
+        -- Check intersections with objects in the world
+        nlx, nuy = game.map:convertScreenToTile(self.p.x, self.p.y)
+        nrx, ndy = game.map:convertScreenToTile(self.p.x + self.d.w, self.p.y + self.d.h)
+
+        nlx = math.floor(nlx)
+        nuy = math.floor(nuy)
+        nrx = math.floor(nrx)
+        ndy = math.floor(ndy)
+
+        for index, item in ipairs(game.items) do
+            if (item.x == nlx or item.x == nrx) and
+                (item.y == nuy or item.y == ndy) then
+                print(item.description, item.image)
+                -- delete this item
+                table.remove(game.items, index)
+                break
+            end
+        end
+
+        if (game.scaleDown.x == nlx or game.scaleDown.x == nrx) and 
+            (game.scaleDown.y == nuy or game.scaleDown.y == ndy) then
+            if not game.scaleDown.pressed then
+                game:changeScale(-1)
+                game.scaleDown.pressed = true
+            end
+        else
+            game.scaleDown.pressed = false
+        end
+
+        if (game.scaleUp.x == nlx or game.scaleUp.x == nrx) and
+            (game.scaleUp.y == nuy or game.scaleUp.y == ndy) then
+            if not game.scaleUp.pressed then
+                game:changeScale(1)
+                game.scaleUp.pressed = true
+            end
+        else
+            game.scaleUp.pressed = false
         end
 
         if self.currAnimation then self.currAnimation:update(dt) end

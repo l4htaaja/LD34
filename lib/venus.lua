@@ -90,10 +90,11 @@ end
 -- switch with transition
 function venus.switch(to, effect, duration)
     if next(venus.current) == nil or effect == 'none' or duration == 0 then
-		if venus.current then
-			if venus.current.left then venus.current:left() end
-			if to.entering then to:entering() end
-		end
+        if venus.current then
+	    if venus.current.left then venus.current:left() end
+	end
+	if to.entering then to:entering() end
+        
         venus._switch(to)
     else
         assert(to, "Missing argument: state to switch to")
