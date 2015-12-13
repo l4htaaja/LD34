@@ -15,7 +15,8 @@ function game:init()
         scale = 3,
         baseScale = {
             w = 200,
-            h = 150
+            h = 150,
+            font = 8
         },
         keys = {
             left = nil,
@@ -45,13 +46,15 @@ function game:init()
     }
 
     self.changeScale = function(self, delta)
-        print(delta)
         local newScale = self.settings.scale + delta
         if newScale > 0 and newScale < 6 then 
             self.settings.scale = newScale
+            g.setNewFont(self.settings.baseScale.font * self.settings.scale)
             win.setMode(self.settings.scale * self.settings.baseScale.w, self.settings.scale * self.settings.baseScale.h)
         end
     end
+    g.setNewFont(self.settings.baseScale.font * self.settings.scale)
+
     local playerSpawnProperties = self.map:getObjectProperties("Objects", "PlayerSpawn")
     local GOLayer = self.map.layers["GameObjects"]
     
@@ -83,7 +86,8 @@ function game:init()
                 x = math.floor(x),
                 y = math.floor(y),
                 description = item.properties.description,
-                image = item.properties.image
+                duration = item.properties.duration,
+                collected = false
             }
         end
     end
@@ -106,8 +110,8 @@ function game:draw()
     g.push()
         g.scale(self.settings.scale, self.settings.scale)
         local player = self.map.layers["GameObjects"].GameObjects.player
-        g.translate(-player.p.x + self.settings.baseScale.w / 2, -player.p.y + self.settings.baseScale.h / 2)
-        self.map:setDrawRange(player.p.x - w / 2, player.p.y - h / 2, w, h)
+        g.translate(-player.p.x + self.settings.baseScale.w / 2.0, -player.p.y + self.settings.baseScale.h / 2.0)
+        self.map:setDrawRange(player.p.x - w / 2.0, player.p.y - h / 2.0, w, h)
         self.map:drawLayer(self.map.layers["Background"])
         self.map:drawLayer(self.map.layers["Collision"])
         self.map:drawLayer(self.map.layers["GameObjects"])
@@ -115,7 +119,7 @@ function game:draw()
     g.pop()
     if #self.messages > 0 then
         g.setColor(0, 0, 0, self.messages.alpha)
-        g.print(self.messages[1].message, 10, 10)
+        g.printf(self.messages[1].message, 10, 10, self.settings.baseScale.w * self.settings.scale - 20, "center")
         g.setColor(255, 255, 255)
     end
 end
@@ -131,13 +135,13 @@ end
 function game:update(dt)
     if not self.configDone and #self.messages == 0 then
         if not self.settings.keys.left then
-            self:show("Try moving left", 1)
+            self:show("Try moving left", 0.5)
         elseif not self.settings.keys.right then
-            self:show("And now right", 1) 
+            self:show("And now right", 0.5) 
         else
             self.configDone = true
-            self:show("Left bound to " .. self.settings.keys.left .. ". Right bound to " .. self.settings.keys.right .. ".", 1)
-            self:show("I'll leave the rest to you then.", 2)
+            self:show("Left bound to " .. self.settings.keys.left .. ". Right bound to " .. self.settings.keys.right .. ".", 3)
+            self:show("I'll leave the rest to you then.", 3)
         end
     end
 

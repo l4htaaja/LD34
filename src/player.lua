@@ -234,9 +234,20 @@ return {
         for index, item in ipairs(game.items) do
             if (item.x == nlx or item.x == nrx) and
                 (item.y == nuy or item.y == ndy) then
-                print(item.description, item.image)
-                -- delete this item
-                table.remove(game.items, index)
+                if not item.collected then
+                    item.collected = true
+                    if not self.foundFirst then
+                        game:show("Looks like you found yourself a time capsule of sorts. Let's see what's in here...", 3)
+                    end
+                    game:show("You found: " .. item.description, item.duration)
+                    if not self.foundFirst then
+                        self.foundFirst = true
+                        game:show("You catalogue the item and continue your journey.", 3)
+                    end
+                elseif (#game.messages == 0) then
+                    game:show("You have already been here. I guess no one minds if you take another look though.", 3)
+                    game:show("You found: " .. item.description, item.duration)
+                end
                 break
             end
         end
