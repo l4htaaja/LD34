@@ -78,7 +78,6 @@ function game:init()
     self.audio.bg:play()
 
     self.items = {}
-
     for index, item in pairs(self.map.layers["Objects"].objects) do
         if item.type == "Item" then
             x, y = self.map:convertScreenToTile(item.x, item.y) -- all items are single tile
@@ -91,6 +90,7 @@ function game:init()
             }
         end
     end
+    self.items.left = #self.items
 
     self.messages = {}
     self.messages.alpha = 0

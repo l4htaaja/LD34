@@ -232,6 +232,7 @@ return {
         ndy = math.floor(ndy)
 
         for index, item in ipairs(game.items) do
+            local show = false
             if (item.x == nlx or item.x == nrx) and
                 (item.y == nuy or item.y == ndy) then
                 if not item.collected then
@@ -244,9 +245,18 @@ return {
                         self.foundFirst = true
                         game:show("You catalogue the item and continue your journey.", 3)
                     end
+                    game.items.left = game.items.left - 1
+                    show = true
                 elseif (#game.messages == 0) then
                     game:show("You have already been here. I guess no one minds if you take another look though.", 3)
                     game:show("You found: " .. item.description, item.duration)
+                    show = true
+                end
+                
+                if show then
+                    local form = " item"
+                    if game.items.left > 1 then form = form .. "s" end
+                    game:show("You have a hunch that there are still " .. game.items.left .. form .. " left...", 2)
                 end
                 break
             end
