@@ -133,6 +133,7 @@ function game:keypressed(key, unicode)
 end
 
 function game:update(dt)
+    if dt > 0.1 then return end -- when moving the window
     if not self.configDone and #self.messages == 0 then
         if not self.settings.keys.left then
             self:show("Try moving left", 0.5)
@@ -141,7 +142,7 @@ function game:update(dt)
         else
             self.configDone = true
             self:show("Left bound to " .. self.settings.keys.left .. ". Right bound to " .. self.settings.keys.right .. ".", 3)
-            self:show("I'll leave the rest to you then.", 3)
+            self:show("I think you're good to go.", 3)
         end
     end
 
