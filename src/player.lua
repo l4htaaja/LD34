@@ -248,19 +248,23 @@ return {
                     game.items.left = game.items.left - 1
                     show = true
                 elseif (#game.messages == 0) then
-                    game:show("You have already been here. I guess no one minds if you take another look though.", 3)
+                    game:show("You have already been here. I guess no one minds if you take another look though.", 2.5)
                     game:show("You found: " .. item.description, item.duration)
                     show = true
                 end
                 
                 if show then
                     if game.items.left > 0 then
-                        local form = " item"
-                        if game.items.left > 1 then form = form .. "s" end
-                        game:show("You have a hunch that there are still " .. game.items.left .. form .. " left...", 2)
+                        local form1 = " is "
+                        local form2 = " item"
+                        if game.items.left > 1 then
+                            form1 = " are "
+                            form2 = form2 .. "s" 
+                        end
+                        game:show("You have a hunch that there " .. form1 .. " still " .. game.items.left .. form2 .. " left...", 2)
                     else
-                        game:show("You have a feeling that everything worth finding has now been found.", 3)
-                        game:show("This concludes your current assignment as a planetary observer.", 2)
+                        game:show("You have a feeling that everything worth finding has now been found.", 5)
+                        game:show("This concludes your current assignment as a planetary observer.", 7)
                     end
                 end
                 break

@@ -194,7 +194,7 @@
   </object>
   <object id="41" type="Item" x="132.667" y="86.3333" width="3.66667" height="3.66667">
    <properties>
-    <property name="description" value="A plastic container. A quick scan of the container reveals that contains mostly nitrogen, a smaller part of oxygen and traces of other gases."/>
+    <property name="description" value="A plastic container. A quick scan of the container reveals that it contains mostly nitrogen, a smaller part of oxygen and traces of other gases."/>
     <property name="duration" value="7"/>
    </properties>
   </object>
@@ -236,7 +236,7 @@
   </object>
   <object id="50" type="Item" x="325.333" y="1011.33" width="5.33333" height="10">
    <properties>
-    <property name="description" value="A large plastic cube made out of comportments of different shapes and sizes. The compartments are filled with sand and decayed organic matter."/>
+    <property name="description" value="A large plastic cube made out of compartments of different shapes and sizes. The compartments are filled with sand and decayed organic matter."/>
     <property name="duration" value="7"/>
    </properties>
   </object>

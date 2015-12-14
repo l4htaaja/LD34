@@ -456,7 +456,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["description"] = "A plastic container. A quick scan of the container reveals that contains mostly nitrogen, a smaller part of oxygen and traces of other gases.",
+            ["description"] = "A plastic container. A quick scan of the container reveals that it contains mostly nitrogen, a smaller part of oxygen and traces of other gases.",
             ["duration"] = "7"
           }
         },
@@ -568,7 +568,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["description"] = "A large plastic cube made out of comportments of different shapes and sizes. The compartments are filled with sand and decayed organic matter.",
+            ["description"] = "A large plastic cube made out of compartments of different shapes and sizes. The compartments are filled with sand and decayed organic matter.",
             ["duration"] = "7"
           }
         },
