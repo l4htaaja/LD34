@@ -254,9 +254,14 @@ return {
                 end
                 
                 if show then
-                    local form = " item"
-                    if game.items.left > 1 then form = form .. "s" end
-                    game:show("You have a hunch that there are still " .. game.items.left .. form .. " left...", 2)
+                    if game.items.left > 0 then
+                        local form = " item"
+                        if game.items.left > 1 then form = form .. "s" end
+                        game:show("You have a hunch that there are still " .. game.items.left .. form .. " left...", 2)
+                    else
+                        game:show("You have a feeling that everything worth finding has now been found.", 3)
+                        game:show("This concludes your current assignment as a planetary observer.", 2)
+                    end
                 end
                 break
             end
