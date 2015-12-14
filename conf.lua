@@ -3,7 +3,7 @@
     t.version = "0.9.2"                -- The LÖVE version this game was made for (string)
     t.console = false                   -- Attach a console (boolean, Windows only)
 
-    t.window.title = "LD34"        -- The window title (string)
+    t.window.title = "LD34 - Wanderer of the Frozen Wastes"        -- The window title (string)
     t.window.icon = nil                -- Filepath to an image to use as the window's icon (string)
     t.window.width = 600               -- The window width (number)
     t.window.height = 450              -- The window height (number)
